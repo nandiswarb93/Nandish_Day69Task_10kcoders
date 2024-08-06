@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+</head>
+<body>
+    <form>
+        <label for="username">Enter user name</label>
+        <input type="text" id="username" placeholder="enter user name" />
+        <br />
+        
+        <label for="password">Enter password</label>
+        <input type="text" id="password" placeholder="enter password" />
+        <br />
+        
+        <button id="submit">SUBMIT</button>
+        <button type="button" id="get">GET</button>
+        <button type="button" id="delete">DELETE</button>
+    </form>
+    
+    <p id="output"></p>
+    <p id="deleteMessage"></p>
+    
+    <script>
+        let submit = document.getElementById("submit");
+        let get = document.getElementById("get");
+        let Delete = document.getElementById("delete");
+        
+        submit.addEventListener("click", function (event) {
+            event.preventDefault();
+            let user = document.getElementById("username").value;
+            let pass = document.getElementById("password").value;
+            
+            const url = "http://localhost:3000/data";
+            
+            fetch(url, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({
+                    username: user,
+                    password: pass,
+                })
+            })
+            .then((response) => {
+                if (response.ok) {
+                    return "Data inserted Successfully";
+                } else {
+                    return "Error: " + response.statusText;
+                }
+            })
+            .then((data) => console.log(data))
+            .catch((error) => console.log(error));
+        });
+        
+        get.addEventListener("click", function () {
+            let user = document.getElementById("username").value;
+            let pass = document.getElementById("password").value;
+            document.getElementById("output").textContent = `Username: ${user}, Password: ${pass}`;
+        });
+        
+        Delete.addEventListener("click", function () {
+            const url = "http://localhost:3000/data";
+            
+            fetch(url, {
+                method: "DELETE",
+            })
+            .then((response) => {
+                if (response.ok) {
+                    document.getElementById("deleteMessage").textContent = "Data was deleted";
+                    return "Data deleted Successfully";
+                } else {
+                    return "Error: " + response.statusText;
+                }
+            })
+            .then((data) => console.log(data))
+            .catch((error) => console.log(error));
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,165 @@
+fetch will return the promise
+
+
+
+json-server --watch db.json  - too start the json server
+
+
+
+json-server --watch db.json --port 5000
+
+
+http://localhost:3000/data?name=nandu&id=2 - query parameter 
+
+
+"http://localhost:3000/data?_limit=2" - limit = 2 two data's will display 
+
+by this we can do page nation 
+
+http://localhost:3000/data?_sort=id = sort 
+
+
+
+http://localhost:3000/data?_sort=-id -- descending order 
+
+
+"http://localhost:3000/data?_sort=-id&_limit=2"
+
+ = to make sort and limit also 
+
+
+ fetch will accept two parameters only
+
+
+
+
+get = to get the data
+post = to send the data
+put  = to update the data
+patch = ti update particular data
+delete = to delete the data
+
+fetch will accept the two options and 
+url => url
+options =>  in option we have 
+
+method : "POST" "GET" "PATCH" "PUT"
+headers :"Content-Type":"application/json"
+body :  here the object wont get print it is a javascript object and we need to convert into JSON.stringify()
+
+
+
+for use put method in url we need to mention the 
+
+id and in body we need to change the content
+
+
+if i do like the above method name will go upside 
+
+because put will modify the entire object
+
+better instead of put we can use patch 
+
+patch will modify the particular data
+
+
+ return "Error : " + response.statusText+" "+response.status; - > this will provide the error reason and status code 
+
+
+
+ 
+const url = "http://localhost:3000/data/3";
+const options = {
+    method : "DELETE"
+}
+
+fetch(url,options).then(response=>{
+    if(response.ok)
+    {
+        return "Data updated Successfully "
+    }
+    else{
+        return "Error : " + response.statusText+" "+response.status;
+    }
+}).then(data=>console.log(data)).catch(error=>console.log(error))
+
+
+
+
+
+
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <form>
+      <label for="username">Enter user name</label>
+      <input type="text" id="username" placeholder="enter user name" />
+      <br />
+
+      <label for="password">Enter password</label>
+      <input type="password" id="password" placeholder="enter password" />
+      <br />
+
+      <button type="button" id="submit">SUBMIT</button>
+      <button type="button" id="delete">DELETE</button>
+    </form>
+
+    <script>
+      let submit = document.getElementById("submit");
+      let del = document.getElementById("delete");
+
+      submit.addEventListener("click", function (event) {
+        event.preventDefault(); // Prevent the default form submission behavior
+
+        let user = document.getElementById("username").value;
+        let pass = document.getElementById("password").value;
+
+        const url = "http://localhost:3000/data";
+
+        fetch(url, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            username: user,
+            password: pass,
+          }),
+        })
+          .then((response) => {
+            if (response.ok) {
+              return "Data inserted Successfully";
+            } else {
+              return "Error: " + response.statusText;
+            }
+          })
+          .then((data) => console.log(data))
+          .catch((error) => console.log(error));
+      });
+
+      del.addEventListener("click", function () {
+        const id = prompt("Enter the ID of the item to delete:"); // Prompt user for ID
+        const url = `http://localhost:3000/data/${id}`;
+
+        fetch(url, {
+          method: "DELETE",
+        })
+          .then((response) => {
+            if (response.ok) {
+              return "Data deleted Successfully";
+            } else {
+              return "Error: " + response.statusText;
+            }
+          })
+          .then((data) => console.log(data))
+          .catch((error) => console.log(error));
+      });
+    </script>
+  </body>
+</html>

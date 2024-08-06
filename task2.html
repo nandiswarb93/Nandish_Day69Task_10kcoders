@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Registration and Login</title>
+</head>
+<body>
+    <h1>Registration Form</h1>
+    <form id="registrationForm">
+        <label for="firstName">First Name</label>
+        <input type="text" id="firstName" placeholder="Enter first name" required />
+        <br />
+
+        <label for="lastName">Last Name</label>
+        <input type="text" id="lastName" placeholder="Enter last name" required />
+        <br />
+
+        <label for="email">Email</label>
+        <input type="email" id="email" placeholder="Enter email" required />
+        <br />
+
+        <label for="password">Password</label>
+        <input type="password" id="password" placeholder="Enter password" required />
+        <br />
+
+        <label for="mobile">Mobile Number</label>
+        <input type="tel" id="mobile" placeholder="Enter mobile number" required />
+        <br />
+
+        <button type="button" id="register">Register</button>
+    </form>
+
+    <h1>Login Form</h1>
+    <form id="loginForm">
+        <label for="loginEmail">Email</label>
+        <input type="email" id="loginEmail" placeholder="Enter email" required />
+        <br />
+
+        <label for="loginPassword">Password</label>
+        <input type="password" id="loginPassword" placeholder="Enter password" required />
+        <br />
+
+        <button type="button" id="login">Login</button>
+    </form>
+
+    <p id="loginMessage"></p>
+
+    <script>
+        document.getElementById('register').addEventListener('click', function() {
+            let firstName = document.getElementById('firstName').value;
+            let lastName = document.getElementById('lastName').value;
+            let email = document.getElementById('email').value;
+            let password = document.getElementById('password').value;
+            let mobile = document.getElementById('mobile').value;
+
+            if (!validateEmail(email)) {
+                alert("Please enter a valid email address.");
+                return;
+            }
+
+            if (!validatePassword(password)) {
+                alert("Password must be at least 8 characters long and contain a mix of letters and numbers.");
+                return;
+            }
+
+            const url = "http://localhost:3000/register";
+
+            fetch(url, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({
+                    firstName: firstName,
+                    lastName: lastName,
+                    email: email,
+                    password: password,
+                    mobile: mobile
+                })
+            })
+            .then((response) => {
+                if (response.ok) {
+                    alert("Registration Successful");
+                } else {
+                    alert("Error: " + response.statusText);
+                }
+            })
+            .catch((error) => console.log(error));
+        });
+
+        document.getElementById('login').addEventListener('click', function() {
+            let loginEmail = document.getElementById('loginEmail').value;
+            let loginPassword = document.getElementById('loginPassword').value;
+
+            const url = "http://localhost:3000/login";
+
+            fetch(url, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({
+                    email: loginEmail,
+                    password: loginPassword
+                })
+            })
+            .then((response) => response.json())
+            .then((data) => {
+                if (data.success) {
+                    document.getElementById('loginMessage').textContent = "Success";
+                } else {
+                    document.getElementById('loginMessage').textContent = "Check the data";
+                }
+            })
+            .catch((error) => console.log(error));
+        });
+
+        function validateEmail(email) {
+            const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            return re.test(String(email).toLowerCase());
+        }
+
+        function validatePassword(password) {
+            return password.length >= 8 && /\d/.test(password) && /[a-zA-Z]/.test(password);
+        }
+    </script>
+</body>
+</html>
